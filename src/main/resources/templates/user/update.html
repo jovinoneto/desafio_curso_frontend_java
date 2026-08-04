@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16">
+        <div class="relative p-8 grid gap-8 rounded-lg shadow-lg w-full max-w-xl">
+            <div th:replace="~{fragments/components :: title-page(text='Update User')}"></div>
+            <div th:replace="~{fragments/components :: errorGlobal}"></div>
+            <form th:action="@{/user/update/{id}(id=${currentUser.id})}" th:object="${userRequest}" method="POST" class="grid gap-6 text-text">
+                <div th:replace="~{fragments/components :: input-view('ID', ${currentUser.id})}"></div>
+                <div th:replace="~{fragments/components :: input-updateLabel(name, 'Example: jovino neto', 4, ${apiError})}"></div>
+                <div th:replace="~{fragments/components :: input-updateLabel(email, 'Example: example@email.com', 11, ${apiError})}"></div>
+                <div class="grid gap-2 p-4 rounded-lg shadow-lg">
+                    <div class="mt-2">
+                        <select id="role" th:field="*{role}"
+                                class="w-full px-4 py-3 bg-surface-secondary rounded-lg outline-none transition-all duration-300
+                                        ring-1 ring-divider hover:ring-divider-hover focus:ring-1 focus:ring-divider-focus">
+                            <option value="" class="bg-red" selected>None (Select a user)</option>
+                            <option th:each="roleOpt : ${allRoles}"
+                                    th:value="${roleOpt.ordinal() + 1}"
+                                    th:text="${roleOpt.name()}">
+                                Name of User
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div th:replace="~{fragments/components :: input-view('created', ${#temporals.format(currentUser.createdAt, 'dd/MM/yyyy HH:mm')})}"></div>
+                    <div th:replace="~{fragments/components :: input-view('updated', ${#temporals.format(currentUser.updatedAt, 'dd/MM/yyyy HH:mm')})}"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div th:replace="~{fragments/components :: btn-primary(Save, submit) }"></div>
+                    <a th:href="@{/user/filter}">
+                        <div th:replace="~{fragments/components :: btn-secondary(Cancel, button)}"></div>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

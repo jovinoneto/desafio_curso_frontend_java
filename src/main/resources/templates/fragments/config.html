@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <div th:fragment="tailwind-cdn">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              // 1. Cor da Marca (Antigo 'color')
+              brand: {
+                DEFAULT: '#7C3AFF', // Classe: bg-brand
+                hover: '#4412A5',   // Classe: bg-brand-hover
+              },
+
+              // 2. Cores de Fundo / Superfície (Antigos 'primary', 'secondary', etc)
+              surface: {
+                DEFAULT: '#141414', // Classe: bg-surface
+                secondary: '#1B1B1B', // Classe: bg-surface-secondary
+                tertiary: '#212121',  // Classe: bg-surface-tertiary
+                light: '#808080',
+              },
+
+              // 3. Feedback / Ações destrutivas
+              danger: {
+                DEFAULT: '#BA0000', // Classe: bg-danger
+                hover: '#8C1010',   // Classe: bg-danger-hover
+              },
+
+              // 4. Textos e Conteúdos (Evita escrever 'text-text')
+              content: {
+                DEFAULT: '#FFFFFF',   // Classe: text-content
+                secondary: '#E6E6E6', // Classe: text-content-secondary
+                tertiary: '#808080',
+                hover: '#808080',
+
+                focus: {
+                  DEFAULT: '#7C3AFF',
+                },
+
+                action: {
+                  DEFAULT: '#BA0000',
+                }
+              },
+
+              // 5. Linhas e Bordas (Evita escrever 'border-border')
+              divider: {
+                DEFAULT: '#292929', // Classe: border-divider
+                hover: '#808080',   // Classe: border-divider-hover
+
+                focus: {
+                  DEFAULT: '#7C3AFF',
+                  hover: '#4412A5',
+                },
+
+                action: {
+                  DEFAULT: '#BA0000',
+                }
+
+              }
+            },
+            fontFamily: {
+              display: ['Archivo Display', 'Archivo', 'sans-serif'],
+              body: ['Archivo', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+  </div>
+
+  <div th:fragment="font-google">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  </div>
+
+</body>
+</html>

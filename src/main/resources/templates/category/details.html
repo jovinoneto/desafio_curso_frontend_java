@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16">
+        <div class="relative p-8 grid gap-8 rounded-lg shadow-lg w-full max-w-xl">
+            <div class="grid gap-8">
+                <div th:replace="~{fragments/components :: title-page(text='Category Details')}"></div>
+                <div th:replace="~{fragments/components :: errorGlobal}"></div>
+                <form th:action="@{/category/delete/{id}(id=${category.id})}" th:object="${category}" method="POST" class="grid gap-6">
+                <div>
+                <table class="w-full rounded-lg">
+                    <thead>
+                        <tr th:object="${category}">
+                            <th th:text="${category.name}" class="py-3 px-4 text-left bg-brand rounded-t-lg">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pt-4 pb-2 px-4">
+                                <span>Name: </span>
+                                <span th:text="${category.name}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">
+                                <span>Created: </span>
+                                <span th:text="${#temporals.format(category.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-4">
+                                <span>Updated: </span>
+                                <span th:text="${#temporals.format(category.updatedAt, 'dd/MM/yyyy HH:mm')}"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pt-2 pb-4 px-4">
+                                <span>ID: </span>
+                                <span th:text="${category.id}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <a th:href="@{/category/update/{id}(id=${category.id})}"
+                            type="submit"
+                            class="w-full relative overflow-hidden bg-brand px-6 py-3 rounded-lg font-semibold text-content tracking-wide
+                            transition-all duration-200 active:translate-y-0 hover:bg-brand-hover after:content-[''] after:absolute after:inset-0
+                            after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent
+                            after:-translate-x-full after:transition-transform after:duration-300 after:ease-in-out hover:after:translate-x-full">
+                        Edit
+                    </a>
+                    <button onclick="return confirm('Are you sure you want to delete this category?')"
+                            type="submit"
+                            class="w-full relative overflow-hidden bg-danger px-6 py-3 rounded-lg font-semibold text-light tracking-wide
+                           transition-all duration-200 active:translate-y-0 hover:bg-danger-hover after:content-[''] after:absolute after:inset-0
+                           after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent
+                           after:-translate-x-full after:transition-transform after:duration-300 after:ease-in-out hover:after:translate-x-full">
+                        Delete
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

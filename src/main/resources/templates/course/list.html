@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="min-h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16">
+        <div class="relative p-8 grid gap-8 rounded-lg shadow-lg w-full max-w-xl">
+            <div class="grid gap-8">
+                <div th:replace="~{fragments/components :: title-page(text='Courses List')}"></div>
+                <div th:replace="~{fragments/components :: errorGlobal}"></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto border-collapse text-center rounded-lg">
+                        <thead>
+                            <tr class="bg-brand">
+                                <th class="py-3 px-4 rounded-tl-lg">Course</th>
+                                <th class="py-3 px-4">Category</th>
+                                <th class="py-3 px-4">Teacher</th>
+                                <th class="py-3 px-4 rounded-tr-lg">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="course : ${courses}" class="odd:bg-surface-tertiary even:bg-surface-secondary text-center relative">
+                                <td class="py-3 px-2" th:text="${course.name}"></td>
+                                <td class="py-3 px-2" th:text="${course.category.name}"></td>
+                                <td class="py-3 px-2" th:text="${course.user?.name}"></td>
+                                <td class="py-3 px-2 relative">
+                                    <span class="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out">
+                                                <svg class="absolute inset-0 h-full w-full stroke-red-600 transition-opacity" th:classappend="${course.active} ? 'opacity-0' : 'opacity-100'" fill="none" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                <svg class="absolute inset-0 h-full w-full stroke-green-600 transition-opacity" th:classappend="${course.active} ? 'opacity-100' : 'opacity-0'" fill="none" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(courses)}">
+                                <td colspan="4">Course not found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

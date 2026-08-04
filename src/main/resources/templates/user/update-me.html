@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16">
+        <div class="relative p-8 grid gap-8 rounded-lg shadow-lg w-full max-w-xl">
+            <div th:replace="~{fragments/components :: title-page(text='Update')}"></div>
+            <div th:replace="~{fragments/components :: errorGlobal}"></div>
+            <form th:action="@{/user/update/me}" th:object="${user}" method="POST" class="grid gap-6 text-text">
+                <div th:replace="~{fragments/components :: input-updateLabel(name, 'john neto', 5, ${apiError})}"></div>
+                <div th:replace="~{fragments/components :: input-updateLabel(email, 'Example: example@email.com', 11, ${apiError})}"></div>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div th:replace="~{fragments/components :: btn-primary(Save, submit) }"></div>
+                    <a th:href="@{/user/profile/me}">
+                        <div th:replace="~{fragments/components :: btn-secondary(Cancel, button)}"></div>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

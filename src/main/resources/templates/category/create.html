@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Category</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16">
+        <div class="relative p-8 grid gap-8 rounded-lg shadow-lg w-full max-w-xl">
+            <div th:replace="~{fragments/components :: title-page(text='New Category')}"></div>
+            <div th:replace="~{fragments/components :: errorGlobal}"></div>
+            <form th:action="@{/category/create}" th:object="${category}" method="POST" class="grid gap-6">
+                <div th:replace="~{fragments/components :: input-text('name', 'exemplo: web', 2, ${apiError})}"></div>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div th:replace="~{fragments/components :: btn-primary(Save, submit) }"></div>
+                    <a th:href="@{/home}">
+                        <div th:replace="~{fragments/components :: btn-secondary(Cancel, button)}"></div>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

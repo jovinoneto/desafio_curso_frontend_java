@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="min-h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16">
+        <div class="relative p-8 grid gap-8 rounded-lg shadow-lg w-full max-w-xl">
+            <div class="grid gap-8">
+                <div th:replace="~{fragments/components :: title-page(text='Categories List')}"></div>
+                <div th:replace="~{fragments/components :: errorGlobal}"></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto border-collapse rounded-lg">
+                        <thead>
+                            <tr class="bg-brand">
+                                <th scope="col" class="py-3 px-2 w-2 text-left rounded-tl-lg">Category</th>
+                                <th scope="col" class="py-3 px-2 w-2 text-left">Created</th>
+                                <th scope="col" class="py-3 px-2 w-2 text-left rounded-tr-lg">Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="category : ${categories}" class="odd:bg-surface-tertiary even:bg-surface-secondary text-center relative">
+                                <td class="py-3 px-2 text-left" th:text="${category.name}"></td>
+                                <td class="py-3 px-2 text-left" th:text="${#temporals.format(category.createdAt, 'dd/MM/yyyy')}"></td>
+                                <td class="py-3 px-2 text-left" th:text="${#temporals.format(category.updatedAt, 'dd/MM/yyyy')}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(categories)}">
+                                <td colspan="3">Category not found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

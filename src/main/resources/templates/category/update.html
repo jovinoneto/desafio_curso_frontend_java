@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Update Category</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content-secondary">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16 py-8">
+        <div class="relative p-8 grid gap-6 rounded-lg shadow-lg w-full max-w-xl">
+            <div th:replace="~{fragments/components :: title-page(text='Update Category')}"></div>
+            <div th:replace="~{fragments/components :: errorGlobal}"></div>
+            <form th:action="@{/category/update/{id}(id=${currentCategory.id})}" th:object="${category}" method="POST" class="grid gap-6">
+                <div th:replace="~{fragments/components :: input-view(id, ${currentCategory.id})}"></div>
+                <div th:replace="~{fragments/components :: input-updateLabel(name, 'Example: DESKTOP', 2, ${apiError})}"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div th:replace="~{fragments/components :: input-view('created', ${#temporals.format(currentCategory.createdAt, 'dd/MM/yyyy HH:mm')})}"></div>
+                    <div th:replace="~{fragments/components :: input-view('updated', ${#temporals.format(currentCategory.updatedAt, 'dd/MM/yyyy HH:mm')})}"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-2">
+                    <div th:replace="~{fragments/components :: btn-primary(Save, submit) }"></div>
+                    <a th:href="@{/category/filter}">
+                        <div th:replace="~{fragments/components :: btn-secondary(Cancel, button)}"></div>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

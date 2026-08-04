@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Category</title>
+
+    <div th:replace="~{fragments/config :: tailwind-cdn}"></div>
+    <div th:replace="~{fragments/config :: font-google}"></div>
+</head>
+<body class="font-body bg-surface text-content">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <div class="min-h-screen justify-items-center content-center [@media(max-height:650px)]:pt-16 py-8">
+        <div class="relative p-8 grid gap-6 rounded-lg shadow-lg w-full max-w-xl">
+            <div th:replace="~{fragments/components :: title-page(text='Search Category')}"></div>
+            <div th:replace="~{fragments/components :: errorGlobal}"></div>
+            <div>
+                <form th:action="@{/category/filter}" method="GET" class="w-full">
+                    <input type="hidden" name="search" th:value="true"/>
+                    <div class="grid gap-2 p-4 rounded-lg shadow-lg">
+                        <div class="w-full">
+                            <label for="name" class="sr-only">Pesquisar</label>
+                            <div class="relative">
+                                <input type="text" id="name" name="name" th:value="${name}" placeholder="Search..."
+                                       class="w-full rounded-lg bg-surface-tertiary py-2.5 pl-4 pr-10 ring-1 ring-divider hover:ring-divider-hover focus:ring-divider-focus focus:outline-none" />
+                                <button type="submit" class="absolute inset-y-0 right-0 flex items-center pr-3 text-content-tertiary transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <form th:action="@{/category/details-redirect}" method="GET" class="w-full grid gap-4">
+                <div class="overflow-hidden rounded-lg">
+                    <table class="w-full table-auto border-collapse text-center bg-surface-secondary">
+                        <thead>
+                        <tr class="bg-brand text-left">
+                            <th scope="col" class="py-3 w-2 rounded-tl-lg"></th>
+                            <th class="py-3 px-2 text-left">Category</th>
+                            <th class="py-3 px-2">Created</th>
+                            <th class="py-3 px-2 rounded-tr-lg">Updated</th>
+                        </tr>
+                        </thead>
+                        <tbody class="border-b border-divider">
+                        <tr th:each="category : ${categories}" class="odd:bg-surface-tertiary even:bg-surface-secondary relative hover:bg-indigo-700/5 transition duration-150">
+                            <td class="py-3 w-2">
+                                <input type="radio" name="selectedId" th:id="'category-' + ${category.id}" th:value="${category.id}" class="peer sr-only" required />
+                                <label th:for="'category-' + ${category.id}" class="absolute inset-0 cursor-pointer z-0 peer-checked:bg-indigo-600/20 transition duration-150"></label>
+                            </td>
+                            <td class="py-3 px-2 text-left font-medium pointer-events-none relative z-10 text-text-primary" th:text="${category.name}"></td>
+                            <td class="py-3 px-2 text-left font-medium pointer-events-none relative z-10 text-text-primary" th:text="${#temporals.format(category.createdAt, 'dd/MM/yyyy')}"></td>
+                            <td class="py-3 px-2 text-left font-medium pointer-events-none relative z-10 text-text-primary" th:text="${#temporals.format(category.updatedAt, 'dd/MM/yyyy')}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(categories)}">
+                            <td class="py-4 px-2 text-center text-sm" colspan="4">Category not found</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="w-full pt-2" th:if="${!#lists.isEmpty(categories)}">
+                    <div th:replace="~{fragments/components :: btn-primary('Details', 'submit') }"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
