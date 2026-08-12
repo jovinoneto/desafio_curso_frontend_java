@@ -60,13 +60,8 @@ public class CategoryServiceTest {
 	@DisplayName("should_send_authorization_header_when_creating_category")
 	public void shouldSendAuthorizationHeaderWhenCreatingCategory() {
 		// Arrange
-		CategoryRequestDTO request = new CategoryRequestDTO("Java");
-		CategoryResponseDTO response = new CategoryResponseDTO(
-				categoryId,
-				"Java",
-				null,
-				null
-		);
+		CategoryRequestDTO request = createRequest("Java");
+		CategoryResponseDTO response = createResponse(categoryId,"Java");
 
 		when(rt.postForObject(
 				contains("/categories"),
@@ -83,21 +78,14 @@ public class CategoryServiceTest {
 
 		// Validação opcional do body retido no HttpEntity
 		assertEquals("Java", entity.getBody().name());
-
 	}
 
 	@Test
 	@DisplayName("should_be_able_to_create_a_category")
 	public void shouldBeAbleToCreateACategory() {
 		// Arrange
-		CategoryRequestDTO request = new CategoryRequestDTO("Java");
-		LocalDateTime now = LocalDateTime.of(2026, 1, 1, 10, 0);
-		CategoryResponseDTO response = new CategoryResponseDTO(
-				categoryId,
-				"Java",
-				now,
-				now
-		);
+		CategoryRequestDTO request = createRequest("Java");
+		CategoryResponseDTO response = createResponse(categoryId, "Java");
 
 		when(rt.postForObject(
 				contains("/categories"),
@@ -123,7 +111,7 @@ public class CategoryServiceTest {
 	@Test
 	@DisplayName("should_throw_exception_when_name_already_exists")
 	void shouldThrowExceptionWhenNameAlreadyExists() {
-		CategoryRequestDTO request = new CategoryRequestDTO("Java");
+		CategoryRequestDTO request = createRequest("Java");
 		String errorBody = ApiErrorResponse.field("name", "name already exists").toString();
 
 		HttpClientErrorException e = HttpExceptionFactory.badRequest(errorBody);
@@ -148,14 +136,8 @@ public class CategoryServiceTest {
 	@Test
 	@DisplayName("should_be_able_to_update_a_category")
 	public void shouldBeAbleToUpdateACategory() {
-		CategoryRequestDTO request = new CategoryRequestDTO("Java");
-		LocalDateTime now = LocalDateTime.of(2026, 1, 1, 10, 0);
-		CategoryResponseDTO response = new CategoryResponseDTO(
-				categoryId,
-				"Java",
-				now,
-				now
-		);
+		CategoryRequestDTO request = createRequest("Java");
+		CategoryResponseDTO response = createResponse(categoryId,"Java");
 
 		ResponseEntity<CategoryResponseDTO> responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -164,18 +146,21 @@ public class CategoryServiceTest {
 				eq(HttpMethod.PUT),
 				any(HttpEntity.class),
 				eq(CategoryResponseDTO.class)
-		)).thenReturn(new ResponseEntity<>(response, org.springframework.http.HttpStatus.OK));
+		)).thenReturn(responseEntity);
 
 		categoryService.update(categoryId, request, token);
 
 		HttpEntity<CategoryRequestDTO> entity = TestHeaderUtils.captureExchangeEntity(rt, "/categories/" + categoryId, HttpMethod.PUT);
 		TestHeaderUtils.assertAuthorizationHeader(entity, token);
+
+		assertNotNull(entity.getBody());
+		assertEquals("Java", entity.getBody().name());
 	}
 
 	@Test
 	@DisplayName("should_throw_exception_when_category_not_found_on_update")
 	void shouldThrowExceptionWhenCategoryNotFoundOnUpdate() {
-		CategoryRequestDTO request = new CategoryRequestDTO("Go");
+		CategoryRequestDTO request = createRequest("Web Updated");
 		String errorBody = ApiErrorResponse.field("id", "category not found").toString();
 
 		HttpClientErrorException e = HttpExceptionFactory.notFound(errorBody);
@@ -191,12 +176,15 @@ public class CategoryServiceTest {
 
 		HttpEntity<CategoryRequestDTO> entity = TestHeaderUtils.captureExchangeEntity(rt, "/categories/" + categoryId, HttpMethod.PUT);
 		TestHeaderUtils.assertAuthorizationHeader(entity, token);
+
+		assertNotNull(entity.getBody());
+		assertEquals("Web Updated", entity.getBody().name());
 	}
 
 	@Test
 	@DisplayName("should_throw_exception_when_duplicate_name_on_update")
 	void shouldThrowExceptionWhenDuplicateNameOnUpdate() {
-		CategoryRequestDTO request = new CategoryRequestDTO("Java");
+		CategoryRequestDTO request = createRequest("Java");
 		String errorBody = ApiErrorResponse.field("name", "name already exists").toString();
 
 		HttpClientErrorException e = HttpExceptionFactory.badRequest(errorBody);
@@ -212,6 +200,9 @@ public class CategoryServiceTest {
 
 		HttpEntity<CategoryRequestDTO> entity = TestHeaderUtils.captureExchangeEntity(rt, "/categories/" + categoryId, HttpMethod.PUT);
 		TestHeaderUtils.assertAuthorizationHeader(entity, token);
+
+		assertNotNull(entity.getBody());
+		assertEquals("Java", entity.getBody().name());
 	}
 
 // ------------------------------- DELETE -----------------------------------------
@@ -259,13 +250,7 @@ public class CategoryServiceTest {
 	@Test
 	@DisplayName("should_find_category_by_id_when_exists")
 	void shouldFindCategoryByIdWhenExists() {
-		LocalDateTime now = LocalDateTime.of(2026, 1, 1, 10, 0);
-		CategoryResponseDTO response = new CategoryResponseDTO(
-				categoryId,
-				"Java",
-				now,
-				now
-		);
+		CategoryResponseDTO response = createResponse(categoryId,"Java");
 
 		when(rt.getForObject(
 				contains("/categories/" + categoryId),
@@ -291,16 +276,18 @@ public class CategoryServiceTest {
 	void shouldListAllCategories() {
 		// Arrange
 		List<CategoryResponseDTO> categories = List.of(
-				new CategoryResponseDTO(UUID.randomUUID(), "Java", null, null),
-				new CategoryResponseDTO(UUID.randomUUID(), "Python", null, null)
+				createResponse(UUID.randomUUID(), "Java"),
+				createResponse(UUID.randomUUID(), "Python")
 		);
+
+		ResponseEntity<List<CategoryResponseDTO>> responseEntity = new ResponseEntity<>(categories, HttpStatus.OK);
 
 		when(rt.exchange(
 				contains("/categories"),
 				eq(HttpMethod.GET),
 				any(HttpEntity.class),
 				any(ParameterizedTypeReference.class)
-		)).thenReturn(new ResponseEntity<>(categories, HttpStatus.OK));
+		)).thenReturn(responseEntity);
 
 		// Act
 		List<CategoryResponseDTO> result = categoryService.list();
@@ -323,7 +310,7 @@ public class CategoryServiceTest {
 		// Arrange
 		String name = "Java";
 		List<CategoryResponseDTO> categories = List.of(
-				new CategoryResponseDTO(UUID.randomUUID(), "Java", null, null)
+				createResponse(UUID.randomUUID(), "Java")
 		);
 
 		when(rt.exchange(
@@ -347,5 +334,16 @@ public class CategoryServiceTest {
 				any(ParameterizedTypeReference.class)
 		);
 		verifyNoMoreInteractions(rt);
+	}
+
+	// ------------------------------- HELPERS -----------------------------------------
+
+	private CategoryRequestDTO createRequest(String name) {
+		return new CategoryRequestDTO(name);
+	}
+
+	private CategoryResponseDTO createResponse(UUID id, String name) {
+		LocalDateTime now = LocalDateTime.of(2026, 1, 1, 10, 0);
+		return new CategoryResponseDTO(id, name, now, now);
 	}
 }
