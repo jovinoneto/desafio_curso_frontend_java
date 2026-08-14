@@ -18,6 +18,10 @@ public class HttpExceptionFactory {
 		);
 	}
 
+	public static HttpClientErrorException unauthorized(String responseBody) {
+		return create(HttpStatus.UNAUTHORIZED, responseBody);
+	}
+
 	public static HttpClientErrorException notFound(String responseBody) {
 		return create(HttpStatus.NOT_FOUND, responseBody);
 	}
