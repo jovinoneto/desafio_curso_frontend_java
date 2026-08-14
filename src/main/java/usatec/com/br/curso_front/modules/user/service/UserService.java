@@ -90,6 +90,7 @@ public class UserService {
 	}
 
 	public UserResponseDTO profile(String token) {
+		try {
 			HttpEntity<String> request = new HttpEntity<>(getHeaders(token));
 			var response = rt.exchange(
 					buildUrl("/users/me"),
@@ -99,6 +100,9 @@ public class UserService {
 			);
 
 			return response.getBody();
+		} catch (RestClientResponseException e) {
+			throw new BackIntegrationException(ApiErrorParser.parse(e));
+		}
 	}
 
 	public List<UserResponseDTO> listUser(String token)  {
